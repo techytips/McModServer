@@ -69,12 +69,10 @@ public class Copy extends Thread {
 	    new ZipFile(pluginpath + "/world.zip").addFolder(new File(pluginpath + "/world"));
 	    person.sendMessage("Finishing up...(6/6)");
 	    FileUtils.moveFile(new File(pluginpath + "/world.zip"), new File(webpath + randtemp + "/Techy's-Server.zip"));
-	    Main.lastWD = webpath + randtemp + "/Techy's-Server.zip";
+	    Main.lastWD = downpath + randtemp + "/Techy's-Server.zip";
 	      
 	    person.sendMessage("Here's your world download:");
 	    sendLink(downpath + randtemp + "/Techy's-Server.zip");
-	      
-	    cleanDownloads();
 	    File Dest = new File(pluginpath + "/world");
 	    FileUtils.deleteDirectory(Dest);
 	    Main.inProgress = false;
@@ -91,16 +89,16 @@ public class Copy extends Thread {
       String names[] = dir.list();
       for (int x = 0; x < names.length; x++) {
     	  File del = new File(webpath + names[x]);
-    	  Date hourago = new Date(System.currentTimeMillis() - 3600 * 1000);
-    	  if (FileUtils.isFileOlder(del, hourago)) {
-    		  try {
-    			  del.delete();
-    			  Bukkit.getLogger().info("Deleted file (" + names[x] + ") in webpath");
-    		  }catch(Exception delerror) {
-    			  Bukkit.getLogger().warning("Encountered an error deleting files in the the webpath");
-    		  }
-    		  
-    	  }
+          File world = new File(webpath + names[x] + "Techy's-Server.zip");
+          if (FileUtils.isFileOlder(world, System.currentTimeMillis())) {
+              try {
+                  FileUtils.deleteDirectory(del);
+                  Bukkit.getLogger().info("Deleted file (" + names[x] + ") in webpath");
+              }catch(Exception delerror) {
+                  Bukkit.getLogger().warning("Encountered an error deleting files in the the webpath");
+              }
+    	  }else{Bukkit.getLogger().info("Did not delete file (" + names[x] + ") in webpath");}
+
           
 
         

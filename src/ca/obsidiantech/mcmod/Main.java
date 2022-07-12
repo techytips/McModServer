@@ -23,8 +23,6 @@ public class Main extends JavaPlugin {
         	if (inProgress == true) {
         		sender.sendMessage("Error, world download in progress");
         	}else {
-            	
-            	
         	}
         	return true;
         }
