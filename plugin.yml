@@ -1,0 +1,18 @@
+main: ca.obsidiantech.mcmod.Main
+name: McModServer
+version: 1.0
+author: Techy
+description: Allows players to request a world download
+commands:
+    ModAdmin:
+       description: Admin settings/tools for plugin
+       usage: /modadmin
+       aliases: 
+       permission: mcmod.admin
+       permission-message: You don't have Admin permission
+    GetWorld:
+       description: Gets a link to the latest download
+       usage: /getworld
+       aliases: download
+       permission: mcmod.download
+       permission-message: You don't have the download permission

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="McModDownServer" default="makejar" basedir=".">
+    <target name="makejar" description="Create a jar for the project">
+        <mkdir dir="target"></mkdir>
+        <jar destfile="target/${ant.project.name}.jar">
+            <fileset dir="bin"></fileset>
+            <fileset file="plugin.yml"></fileset>
+        	<zipfileset excludes="META-INF/*.SF" src="zip4j-2.9.1.jar"/>
+        </jar>
+    </target>
+</project>
