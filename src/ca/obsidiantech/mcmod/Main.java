@@ -30,7 +30,7 @@ public class Main extends JavaPlugin {
         }
         
         if (command.getName().equalsIgnoreCase("getworld")) {
-        	if (lastWD == null || ) {
+        	if (lastWD == null) {
         		sender.sendMessage("No recent download found");
         		sender.sendMessage("Executing world download");
         		if (inProgress == true) {
