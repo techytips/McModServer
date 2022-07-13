@@ -27,9 +27,8 @@ public class Main extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("modadmin")) {
-        	if (inProgress == true) {
-        		sender.sendMessage("Error, world download in progress");
-        	}else {
+        	if (inProgress) sender.sendMessage("Error, world download in progress");
+			else {
         	Copy.cleanDownloads();
 			}
         	return true;
@@ -42,7 +41,7 @@ public class Main extends JavaPlugin {
         	}else {
 				sender.sendMessage("No recent download found");
 				sender.sendMessage("Executing world download");
-				if (inProgress == true) {
+				if (inProgress) {
 					sender.sendMessage("World download in progress, please wait a bit.");
 				}else{
 					inProgress = true;
@@ -61,9 +60,6 @@ public class Main extends JavaPlugin {
 			return false;
 		}
 		long difference = new Date().getTime() - Main.lastDownload;
-		if (difference > Settings.delhours * 60 * 60 * 1000){
-			return false;
-		}
-		return true;
+		return difference <= Settings.delhours * 60 * 60 * 1000;
 	}
 }
