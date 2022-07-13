@@ -4,19 +4,23 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Date;
+
 class Settings{
-	static int delhours = 1;
+	public static int delhours = 1;
+	public static String worldName = "/Techy's Server (";
+	public static String webFolderPath = "/webpath/worlds/";
+	public static String baseUrl = "https://files.obsidiantech.ca/worlds/";
 }
 
 public class Main extends JavaPlugin {
 	public static boolean inProgress= false;
-	public static String webpath = "/webpath/worlds/";
-	public static String downpath = "https://files.obsidiantech.ca/worlds/";
-	public static String lastWD = null;
+	public static String gamemode = Bukkit.getDefaultGameMode().toString().toLowerCase();
+	public static long lastDownload = -1;
+	public static String lastDownloadPath = "";
     public void onEnable() {
 		getDataFolder().mkdirs();
-		Copy.webpath = webpath;
-		Copy.downpath = downpath;
+
 	}
     @Override
     public void onDisable() {}
@@ -30,35 +34,36 @@ public class Main extends JavaPlugin {
 			}
         	return true;
         }
-        
         if (command.getName().equalsIgnoreCase("getworld")) {
-        	if (lastWD == null) {
-        		sender.sendMessage("No recent download found");
-        		sender.sendMessage("Executing world download");
-        		if (inProgress == true) {
-            		sender.sendMessage("World download in progress, please wait a bit.");
-            	}else{
-            		inProgress = true;
-                	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "save-all");        	
-                	Copy threadcopy = new Copy();
-                	threadcopy.person = sender;
-                	threadcopy.start();
-            	}
+        	if (checkLastDown()) {
+				sender.sendMessage("Recent world download found");
+				Copy.person = sender;
+				Copy.sendLink(lastDownloadPath);
         	}else {
-        		sender.sendMessage("Recent world download found");
-        		Copy.person = sender;
-        		Copy.sendLink(lastWD);
+				sender.sendMessage("No recent download found");
+				sender.sendMessage("Executing world download");
+				if (inProgress == true) {
+					sender.sendMessage("World download in progress, please wait a bit.");
+				}else{
+					inProgress = true;
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "save-all");
+					Copy threadcopy = new Copy();
+					threadcopy.person = sender;
+					threadcopy.start();
+				}
         	}
-        	
-        	
         	return true;
         }
         return false;    
     }
-    
-    
-    
-    
-    
-    
+	public static boolean checkLastDown(){
+		if (Main.lastDownload == -1){
+			return false;
+		}
+		long difference = new Date().getTime() - Main.lastDownload;
+		if (difference > Settings.delhours * 60 * 60 * 1000){
+			return false;
+		}
+		return true;
+	}
 }

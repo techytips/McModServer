@@ -26,8 +26,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class Copy extends Thread {
   public static String pluginpath = "plugins/McModServer";
   public static String mojangAPI = "https://api.minecraftservices.com/minecraft/profile/lookup/name/";
-  public static String webpath = "";
-  public static String downpath = "";
   public static CommandSender person = null;
   @Override
   public void run() {
@@ -65,16 +63,19 @@ public class Copy extends Thread {
     }
     try {
     	String randtemp = generateRand();
-    	person.sendMessage("Zipping..(5/6)");
+        String zipPath = Settings.webFolderPath + randtemp + Settings.worldName + Main.gamemode + ").zip";
+        String zipUrl = Settings.baseUrl + randtemp + Settings.worldName + Main.gamemode + ").zip";
+    	person.sendMessage("Zipping..(5/6) (this will take a while)");
 	    new ZipFile(pluginpath + "/world.zip").addFolder(new File(pluginpath + "/world"));
 	    person.sendMessage("Finishing up...(6/6)");
-	    FileUtils.moveFile(new File(pluginpath + "/world.zip"), new File(webpath + randtemp + "/Techy's-Server.zip"));
-	    Main.lastWD = downpath + randtemp + "/Techy's-Server.zip";
-	      
-	    person.sendMessage("Here's your world download:");
-	    sendLink(downpath + randtemp + "/Techy's-Server.zip");
-	    File Dest = new File(pluginpath + "/world");
-	    FileUtils.deleteDirectory(Dest);
+	    FileUtils.moveFile(new File(pluginpath + "/world.zip"), new File(zipPath));
+
+        person.sendMessage("Here's your world download:");
+	    sendLink(zipUrl);
+        Main.lastDownload = new Date().getTime();
+        Main.lastDownloadPath = zipUrl;
+
+	    FileUtils.deleteDirectory(new File(pluginpath + "/world"));
 	    Main.inProgress = false;
 	
 	    } catch (Exception e1) {
@@ -85,11 +86,11 @@ public class Copy extends Thread {
   public static void cleanDownloads() {
 	  //enumerates through all the folders in the world downloads folder 
 	  //and deletes them if they are older than (delhours) from now
-	  File dir = new File(webpath);
+	  File dir = new File(Settings.webFolderPath);
       String names[] = dir.list();
       for (int x = 0; x < names.length; x++) {
         try {
-          File del = new File(webpath + names[x]);
+          File del = new File(Settings.webFolderPath + names[x]);
           long date = new Date().getTime() - del.lastModified();
           if (date > Settings.delhours * 60 * 60 * 1000) {
             if (FileUtils.deleteQuietly(del) == true) {
