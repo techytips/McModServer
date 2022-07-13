@@ -8,7 +8,7 @@ import java.util.Date;
 
 class Settings{
 	public static int delhours = 1;
-	public static String worldName = "/Techy's Server (";
+	public static String worldName = "/Techy's Server(";
 	public static String webFolderPath = "/webpath/worlds/";
 	public static String baseUrl = "https://files.obsidiantech.ca/worlds/";
 }
