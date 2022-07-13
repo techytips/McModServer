@@ -4,6 +4,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+class Settings{
+	static int delhours = 1;
+}
 
 public class Main extends JavaPlugin {
 	public static boolean inProgress= false;
@@ -23,7 +26,8 @@ public class Main extends JavaPlugin {
         	if (inProgress == true) {
         		sender.sendMessage("Error, world download in progress");
         	}else {
-        	}
+        	Copy.cleanDownloads();
+			}
         	return true;
         }
         

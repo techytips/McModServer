@@ -84,24 +84,23 @@ public class Copy extends Thread {
   }
   public static void cleanDownloads() {
 	  //enumerates through all the folders in the world downloads folder 
-	  //and deletes them if they are older than an hour from now
+	  //and deletes them if they are older than (delhours) from now
 	  File dir = new File(webpath);
       String names[] = dir.list();
       for (int x = 0; x < names.length; x++) {
-    	  File del = new File(webpath + names[x]);
-          File world = new File(webpath + names[x] + "Techy's-Server.zip");
-          if (FileUtils.isFileOlder(world, System.currentTimeMillis())) {
-              try {
-                  FileUtils.deleteDirectory(del);
-                  Bukkit.getLogger().info("Deleted file (" + names[x] + ") in webpath");
-              }catch(Exception delerror) {
-                  Bukkit.getLogger().warning("Encountered an error deleting files in the the webpath");
-              }
-    	  }else{Bukkit.getLogger().info("Did not delete file (" + names[x] + ") in webpath");}
-
-          
-
-        
+        try {
+          File del = new File(webpath + names[x]);
+          long date = new Date().getTime() - del.lastModified();
+          if (date > Settings.delhours * 60 * 60 * 1000) {
+            if (FileUtils.deleteQuietly(del) == true) {
+              Bukkit.getLogger().info("Deleted file (" + names[x] + ") in webpath");
+            }else{
+              Bukkit.getLogger().warning("Was not able to delete file (" + names[x] + ")");
+            }
+          }
+        }catch(Exception fileDelError){
+          Bukkit.getLogger().warning("Encountered an error deleting files in the the webpath");
+        }
       }
   }
   public static void sendLink(String link) {
